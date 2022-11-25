@@ -30,4 +30,4 @@
       ignore_errors: yes
 
     - name: build site by running ansible in a docker container
-      command: "docker run -d -p 8095:8080 -it -v /opt/share/nginx/html/website:/usr/share/nginx/html --name nginxphp dubbaka/nginx-php"
+      command: "docker run -d -p 8095:8080 -it -rm -v /opt/share/nginx/html/website:/usr/share/nginx/html --name nginxphp dubbaka/nginx-php"
