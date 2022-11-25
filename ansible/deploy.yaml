@@ -1,0 +1,33 @@
+---
+
+- name: deploy docker container.
+  hosts: docker4
+  gather_facts: false
+ 
+  tasks:
+    - name: create a host folder.
+      become: yes
+      file:
+        name: /opt/share/nginx/html
+        state: directory
+        owner: www-data
+        group: www-data
+
+    - name: Copy website content
+      become: yes
+      copy:
+        src: /opt/edureka/website
+        dest: /opt/share/nginx/html
+        owner: www-data
+        group: www-data
+
+    - name: stop running docker container
+      command: "docker stop simple"
+      ignore_errors: yes
+
+    - name: delete simple docker container
+      command: "docker rm simple"
+      ignore_errors: yes
+
+    - name: build site by running ansible in a docker container
+      command: "docker run -d -p 8094:8080 -it -v /opt/share/nginx/html/website:/usr/share/nginx/html --name simple dubbaka/simple-nginx-image"

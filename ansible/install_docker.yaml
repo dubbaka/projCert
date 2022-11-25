@@ -1,0 +1,56 @@
+---
+#Install docker on ubuntu nodes
+
+- hosts: "{{ node }}"
+  become: true
+
+  tasks:
+    - name: Install required system packages.
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+
+      loop:
+        - 'apt-transport-https'
+        - 'ca-certificates'
+        - 'curl'
+        - 'software-properties-common'
+        - 'python3-pip'
+        - 'virtualenv'
+        - 'python3-setuptools'
+
+    - name: create sybolic link to python3
+      become: yes
+      file: 
+        src: "/usr/bin/python3"
+        dest: "/usr/bin/python"
+        state: link
+
+    - name: Add Docker GPG apt Key.
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository.
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker.
+      apt:
+        update_cache: yes
+        name: docker-ce
+        state: latest
+
+    - name: Install Docker Module for Python.
+      pip:
+        name: docker
+
+    - name: set user permission to run docker
+      become: yes
+      shell: "{{ item }}"
+      with_items:
+        - "usermod -aG docker vagrant"
+        - "docker ps"
+        - "hostnamectl set-hostname {{ inventory_hostname }}"
