@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Deploy Docker Container using Ansible Playbook') {
             steps {
-                ansiblePlaybook becomeUser: null, playbook: '/var/lib/jenkins/workspace/projCert/ansible/deploy.yaml', sudoUser: null
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Ansible Server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'ansible-playbook /opt/edureka/ansible/deploy.yaml', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '//opt//edureka', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
         }
     }
