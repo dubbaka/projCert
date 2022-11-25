@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Deploy Docker Container using Ansible Playbook') {
             steps {
-                ansiblePlaybook become: true, becomeUser: 'vagrant', credentialsId: 'ansible', playbook: '/opt/edureka/ansible/deploy.yaml'
+                ansiblePlaybook become: true, becomeUser: 'vagrant', credentialsId: 'ansible', playbook: '/var/lib/jenkins/workspace/projCert/ansible/deploy.yaml'
             }
         }
     }
