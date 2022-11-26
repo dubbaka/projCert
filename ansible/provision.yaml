@@ -18,7 +18,7 @@
 
     - name: Build Vagrantfile.
       template:
-        src: /Users/ranganath/nath/edureka/projCert/ansible/vagrant.j2
+        src: /opt/edureka/ansible/vagrant.j2
         dest: /home/nath/vagrantboxes/server{{ build }}/Vagrantfile
 
     - name: Check Host Memory.
