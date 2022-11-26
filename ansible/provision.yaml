@@ -2,11 +2,11 @@
 #Simple Ansible Playbook to build and push Docker image to Registry
 
 - name: Build Vagrant VM Machine.
-  hosts: ubuntu
+  hosts: ansibleserver
   gather_facts: false
 
   vars:
-    - build: 99
+    - build: {{ buildNum }}
 
   tasks:
     - name: Create a directory for new VM.
