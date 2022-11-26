@@ -1,7 +1,7 @@
 ---
   
   #Install docker on ubuntu nodes
-- hosts: "server{{ buildNum }}"
+- hosts: "{{ server }}"
   become: true
 
   tasks:

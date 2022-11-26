@@ -1,0 +1,15 @@
+---
+
+- name: Application Deployment on Docker Container.
+  hosts: ansibleserver
+
+  vars:
+    - server: "server{{ buildNum }}"
+
+  tasks:
+
+    - name: Install docker software on new provisioned VM.
+      import_playbook: install_docker.yaml
+
+    - name: Provision a new VM on ubuntu server.
+      import_playbook: deploy.yaml
