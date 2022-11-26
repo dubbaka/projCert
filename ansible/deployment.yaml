@@ -1,15 +1,89 @@
 ---
 
-- name: Application Deployment on Docker Container.
-  hosts: ansibleserver
-
-  vars:
-    - server: "server{{ buildNum }}"
+  #Install docker on ubuntu nodes
+- hosts: "server{{ buildNum }}"
+  become: true
 
   tasks:
 
-    - name: Install docker software on new provisioned VM.
-      import_playbook: install_docker.yaml
+    - name: Install required system packages.
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
 
-    - name: Provision a new VM on ubuntu server.
-      import_playbook: deploy.yaml
+      loop:
+        - 'apt-transport-https'
+        - 'ca-certificates'
+        - 'curl'
+        - 'software-properties-common'
+        - 'python3-pip'
+        - 'virtualenv'
+        - 'python3-setuptools'
+
+    - name: create sybolic link to python3
+      become: yes
+      file: 
+        src: "/usr/bin/python3"
+        dest: "/usr/bin/python"
+        state: link
+
+    - name: Add Docker GPG apt Key.
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository.
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker.
+      apt:
+        update_cache: yes
+        name: docker-ce
+        state: latest
+
+    - name: Install Docker Module for Python.
+      pip:
+        name: docker
+
+    - name: set user permission to run docker
+      become: yes
+      shell: "{{ item }}"
+      with_items:
+        - "usermod -aG docker vagrant"
+        - "docker ps"
+        - "hostnamectl set-hostname {{ inventory_hostname }}"
+
+- name: deploy docker container.
+  hosts: "server{{ buildNum }}"
+  gather_facts: false
+
+  tasks:
+    - name: create a host folder.
+      become: yes
+      file:
+        name: /opt/share/nginx/html
+        state: directory
+        owner: www-data
+        group: www-data
+
+    - name: Copy website content
+      become: yes
+      copy:
+        src: /opt/edureka/website
+        dest: /opt/share/nginx/html
+        owner: www-data
+        group: www-data
+
+    - name: stop running docker container
+      command: "docker stop nginxphp"
+      ignore_errors: yes
+
+    - name: delete simple docker container
+      command: "docker rm nginxphp"
+      ignore_errors: yes
+
+    - name: build site by running ansible in a docker container
+      command: "docker run -d -p 8095:8080 -it -v /opt/share/nginx/html/website:/usr/share/nginx/html --name nginxphp dubbaka/nginx-php"
