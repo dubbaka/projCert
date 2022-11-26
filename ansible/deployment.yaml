@@ -53,7 +53,6 @@
       shell: "{{ item }}"
       with_items:
         - "usermod -aG docker vagrant"
-        - "newgrp docker"
         - "docker ps"
         - "hostnamectl set-hostname {{ inventory_hostname }}"
 
@@ -86,5 +85,6 @@
       command: "docker rm nginxphp"
       ignore_errors: yes
 
-    - name: build site by running ansible in a docker container
+    - name: build site by running ansible in a docker container.
+      become: yes
       command: "docker run -d -p 8095:8080 -it -v /opt/share/nginx/html/website:/usr/share/nginx/html --name nginxphp dubbaka/nginx-php"
