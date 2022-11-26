@@ -53,6 +53,7 @@
       shell: "{{ item }}"
       with_items:
         - "usermod -aG docker vagrant"
+        - "newgrp docker"
         - "docker ps"
         - "hostnamectl set-hostname {{ inventory_hostname }}"
 
