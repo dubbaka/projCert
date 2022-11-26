@@ -1,5 +1,4 @@
 ---
-- import_playbook: provision.yaml
 
 - name: deploy docker container.
   hosts: server{{ buildNum }}
