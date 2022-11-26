@@ -1,0 +1,50 @@
+---
+#Simple Ansible Playbook to build and push Docker image to Registry
+
+- name: Build Vagrant VM Machine.
+  hosts: ubuntu
+  gather_facts: false
+
+  vars:
+    - build: 99
+
+  tasks:
+    - name: Create a directory for new VM.
+      file:
+        name: /home/nath/vagrantboxes/server{{ build }}
+        state: directory
+        owner: nath
+        group: nath
+
+    - name: Build Vagrantfile.
+      template:
+        src: /Users/ranganath/nath/edureka/projCert/ansible/vagrant.j2
+        dest: /home/nath/vagrantboxes/server{{ build }}/Vagrantfile
+
+    - name: Check Host Memory.
+      shell: 'free -h'
+      register: file1
+    
+    - name: Show Memory Information.
+      debug:
+        msg: "{{ file1.stdout }}"
+    
+    - name: Start Vagrant VM host server{{ build }}
+      shell: |
+        cd /home/nath/vagrantboxes/server{{ build }}
+        vagrant up server{{ build }}
+
+    - name: Update ansible inventory file
+      shell: |
+        echo "server{{ build }} ansible_host=192.168.56.{{ build }} ansible_ssh_user=vagrant" >> ~/inventory
+
+    - name: Set SSH Connection
+      shell: "sshpass -p vagrant ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no vagrant@192.168.56.{{ build }}"
+
+    - name: Ping the new server{{ build }}
+      shell: "ansible server{{ build }} -m ping"
+      register: ping1
+
+    - name: show ping output.
+      debug:
+        msg: "{{ ping1.stdout }}"
