@@ -6,7 +6,7 @@
   gather_facts: false
 
   vars:
-    - build: {{ buildNum }}
+    - build: "{{ buildNum }}"
 
   tasks:
     - name: Create a directory for new VM.

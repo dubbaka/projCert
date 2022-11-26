@@ -1,7 +1,7 @@
 ---
 
 - name: deploy docker container.
-  hosts: server{{ buildNum }}
+  hosts: server"{{ buildNum }}"
   gather_facts: false
 
   tasks:

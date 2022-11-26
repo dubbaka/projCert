@@ -1,14 +1,16 @@
 ---
-#Provision a new VM on ubuntu server.
 
-- import_playbook: provision.yaml
-
-#Install docker on ubuntu nodes
-
-- hosts: server{{ buildNum }}
+- hosts: server"{{ buildNum }}"
   become: true
 
   tasks:
+
+    - name: Provision Test Server Build. #Provision a new VM on ubuntu server.
+      import_playbook: provision.yaml
+      vars:
+        buildNum: "{{ buildNum }}"
+
+    #Install docker on ubuntu nodes
     - name: Install required system packages.
       apt:
         name: "{{ item }}"
