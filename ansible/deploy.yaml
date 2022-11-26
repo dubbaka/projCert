@@ -1,4 +1,9 @@
 ---
+  #Provision a new VM on ubuntu server.
+- import_playbook: provision.yaml
+
+  #Install docker software on new provisioned VM
+- import_playbook: install_docker.yaml
 
 - name: deploy docker container.
   hosts: "server{{ buildNum }}"
