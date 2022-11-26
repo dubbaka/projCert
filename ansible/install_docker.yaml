@@ -1,10 +1,9 @@
 ---
   #Provision a new VM on ubuntu server.
 - import_playbook: provision.yaml
-  buildNum: "{{ buildNum }}"
-
+  
   #Install docker on ubuntu nodes
-- hosts: server"{{ buildNum }}"
+- hosts: "server{{ buildNum }}"
   become: true
 
   tasks:
