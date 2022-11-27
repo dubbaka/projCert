@@ -43,5 +43,9 @@ pipeline {
             sh 'cd /home/nath/vagrantboxes/server$BUILD_NUMBER'
             sh 'vagrant destroy server$BUILD_NUMBER'
         }
+        failure {
+            sh 'cd /home/nath/vagrantboxes/server$BUILD_NUMBER'
+            sh 'vagrant destroy server$BUILD_NUMBER'
+        }
     }
 }
