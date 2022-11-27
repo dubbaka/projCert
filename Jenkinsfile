@@ -29,7 +29,7 @@ pipeline {
                 sh 'docker push dubbaka/nginx-php:latest'
             }
         }
-        stage('Install required software and Run Docker Container using Ansible') {
+        stage('Install required softwares and Run Docker Container using Ansible') {
             steps {
                 sshPublisher(publishers: [sshPublisherDesc(configName: 'Ansible Server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'ansible-playbook /opt/edureka/ansible/deployment.yaml --extra-vars "buildNum=$BUILD_NUMBER"', execTimeout: 990000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
