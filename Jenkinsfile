@@ -40,12 +40,10 @@ pipeline {
             sh 'docker logout'
         }
         unstable {
-            sh 'cd /home/nath/vagrantboxes/server$BUILD_NUMBER'
-            sh 'vagrant destroy server$BUILD_NUMBER'
+            sshPublisher(publishers: [sshPublisherDesc(configName: 'Ansible Server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'ansible-playbook /opt/edureka/ansible/cleanup.yaml --extra-vars "buildNum=$BUILD_NUMBER"', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
         }
         failure {
-            sh 'cd /home/nath/vagrantboxes/server$BUILD_NUMBER'
-            sh 'vagrant destroy server$BUILD_NUMBER'
+            sshPublisher(publishers: [sshPublisherDesc(configName: 'Ansible Server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'ansible-playbook /opt/edureka/ansible/cleanup.yaml --extra-vars "buildNum=$BUILD_NUMBER"', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
         }
     }
 }

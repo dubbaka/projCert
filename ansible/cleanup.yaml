@@ -1,0 +1,21 @@
+---
+#Destroy provisioned Test server if the build status is failure or unstable.
+
+- name: Destroy Vagrant VM Machine.
+  hosts: ansibleserver
+  gather_facts: false
+
+  vars:
+    - build: "{{ buildNum }}"
+
+  tasks:
+ 
+    - name: Destroy Vagrant VM host server{{ build }}
+      shell: |
+        cd /home/nath/vagrantboxes/server{{ build }}
+        vagrant destroy server{{ build }}
+
+    - name: Delete directory for new VM.
+      file:
+        name: /home/nath/vagrantboxes/server{{ build }}
+        state: absent
