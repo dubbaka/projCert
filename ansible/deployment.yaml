@@ -2,7 +2,7 @@
 
   #Install docker on ubuntu nodes
 - hosts: "server{{ buildNum }}"
-  become: true
+  become: yes
 
   tasks:
 
@@ -22,7 +22,6 @@
         - 'python3-setuptools'
 
     - name: create sybolic link to python3
-      become: yes
       file: 
         src: "/usr/bin/python3"
         dest: "/usr/bin/python"
@@ -49,20 +48,13 @@
         name: docker
 
     - name: set user permission to run docker
-      become: yes
       shell: "{{ item }}"
       with_items:
         - "usermod -aG docker vagrant"
         - "docker ps"
         - "hostnamectl set-hostname {{ inventory_hostname }}"
 
-- name: deploy docker container.
-  hosts: "server{{ buildNum }}"
-  gather_facts: false
-
-  tasks:
     - name: create a host folder.
-      become: yes
       file:
         name: /opt/share/nginx/html
         state: directory
@@ -70,7 +62,6 @@
         group: www-data
 
     - name: Copy website content
-      become: yes
       copy:
         src: /opt/edureka/website
         dest: /opt/share/nginx/html
@@ -86,5 +77,4 @@
       ignore_errors: yes
 
     - name: build site by running ansible in a docker container.
-      become: yes
       command: "docker run -d -p 8095:8080 -it -v /opt/share/nginx/html/website:/usr/share/nginx/html --name nginxphp dubbaka/nginx-php"
