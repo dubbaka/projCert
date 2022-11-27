@@ -39,5 +39,9 @@ pipeline {
         always {
             sh 'docker logout'
         }
+        unstable {
+            sh 'cd /home/nath/vagrantboxes/server$BUILD_NUMBER'
+            sh 'vagrant destroy server$BUILD_NUMBER'
+        }
     }
 }
