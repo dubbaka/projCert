@@ -13,7 +13,7 @@
     - name: Destroy Vagrant VM host server{{ build }}
       shell: |
         cd /home/nath/vagrantboxes/server{{ build }}
-        vagrant destroy server{{ build }}
+        vagrant destroy server{{ build }} -f
 
     - name: Delete directory for new VM.
       file:
